@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="VitaNuova Professional Broker Simulator - PAC, TFR, Investments Analysis" />
+  <meta name="theme-color" content="#2C3E50" />
+  <title>🏦 Simulatore Broker VitaNuova Pro</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --white: #FFFFFF;
+      --red: #E74C3C;
+      --red-dark: #C0392B;
+      --red-light: #FADBD8;
+      --blue: #2C3E50;
+      --blue-light: #3498DB;
+      --blue-lighter: #ECF0F1;
+      --gray-dark: #34495E;
+      --gray-medium: #7F8C8D;
+      --gray-light: #BDC3C7;
+      --gray-lighter: #ECF0F1;
+      --success: #27AE60;
+      --warning: #F39C12;
+      --bg-gradient: linear-gradient(135deg, #F5F7F9 0%, #E8EDEF 100%);
+      --shadow-sm: 0 2px 4px rgba(44, 62, 80, 0.06);
+      --shadow-md: 0 4px 12px rgba(44, 62, 80, 0.1);
+      --shadow-lg: 0 8px 24px rgba(44, 62, 80, 0.15);
+      --radius: 12px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    html, body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+      background: var(--bg-gradient);
+      color: var(--blue);
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #root {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ========== LOGIN PAGE ========== */
+    .login-wrapper {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-light) 100%);
+      padding: 20px;
+    }
+
+    .login-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      width: 100%;
+      max-width: 480px;
+      padding: 60px 40px;
+      animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .login-logo {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .login-header h1 {
+      font-size: 28px;
+      color: var(--blue);
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .login-header p {
+      color: var(--gray-medium);
+      font-size: 14px;
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group select,
+    .form-group input {
+      padding: 14px 16px;
+      border: 2px solid var(--gray-lighter);
+      border-radius: 8px;
+      font-size: 14px;
+      transition: var(--transition);
+      font-family: inherit;
+    }
+
+    .form-group select:focus,
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    }
+
+    .error-msg {
+      color: var(--red);
+      font-size: 13px;
+      padding: 12px;
+      background: var(--red-light);
+      border-radius: 8px;
+      border-left: 3px solid var(--red);
+    }
+
+    .btn-login {
+      padding: 14px 24px;
+      background: var(--red);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: 12px;
+    }
+
+    .btn-login:hover {
+      background: var(--red-dark);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .btn-login:active {
+      transform: translateY(0);
+    }
+
+    .login-footer {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid var(--gray-lighter);
+      color: var(--gray-medium);
+      font-size: 11px;
+    }
+
+    /* ========== DASHBOARD ========== */
+    .dashboard {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100vh;
+      background: var(--white);
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--blue) 0%, #1F4E5C 100%);
+      color: var(--white);
+      padding: 20px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow-md);
+      border-bottom: 4px solid var(--red);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-left h1 {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .header-brand {
+      font-size: 11px;
+      color: var(--red);
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .user-badge {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .btn-logout {
+      padding: 8px 18px;
+      background: transparent;
+      color: var(--white);
+      border: 2px solid var(--white);
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-logout:hover {
+      background: var(--white);
+      color: var(--blue);
+    }
+
+    .tabs-nav {
+      display: flex;
+      gap: 8px;
+      padding: 16px 32px 0;
+      border-bottom: 2px solid var(--gray-lighter);
+      background: var(--white);
+      overflow-x: auto;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 14px 24px;
+      background: transparent;
+      border: none;
+      border-bottom: 3px solid transparent;
+      color: var(--gray-dark);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: var(--transition);
+    }
+
+    .tab-btn:hover {
+      color: var(--red);
+    }
+
+    .tab-btn.active {
+      color: var(--red);
+      border-bottom-color: var(--red);
+    }
+
+    .tabs-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 32px;
+      background: var(--bg-gradient);
+    }
+
+    .tab-content {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .tab-content h2 {
+      color: var(--blue);
+      font-size: 26px;
+      margin-bottom: 28px;
+      font-weight: 700;
+    }
+
+    .tab-content h3 {
+      color: var(--red);
+      font-size: 16px;
+      margin: 28px 0 16px 0;
+      font-weight: 600;
+    }
+
+    /* ========== INPUT SECTION ========== */
+    .input-section {
+      background: var(--white);
+      padding: 28px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      margin-bottom: 28px;
+      border: 1px solid var(--gray-lighter);
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .input-field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .input-field label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .input-field input,
+    .input-field select {
+      padding: 12px 14px;
+      border: 2px solid var(--gray-lighter);
+      border-radius: 8px;
+      font-size: 14px;
+      transition: var(--transition);
+      font-family: inherit;
+    }
+
+    .input-field input:focus,
+    .input-field select:focus {
+      outline: none;
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.08);
+    }
+
+    /* ========== CARDS & STATS ========== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: var(--white);
+      padding: 20px;
+      border-radius: var(--radius);
+      border: 1px solid var(--gray-lighter);
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+
+    .stat-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--gray-medium);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--blue);
+      margin-bottom: 4px;
+    }
+
+    .stat-change {
+      font-size: 12px;
+      color: var(--success);
+      font-weight: 500;
+    }
+
+    .stat-card.positive .stat-value {
+      color: var(--success);
+    }
+
+    .stat-card.negative .stat-value {
+      color: var(--red);
+    }
+
+    /* ========== TABLES ========== */
+    .table-wrapper {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--gray-lighter);
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead {
+      background: linear-gradient(135deg, var(--blue) 0%, #1F4E5C 100%);
+      color: var(--white);
+    }
+
+    th {
+      padding: 16px 12px;
+      text-align: left;
+      font-weight: 600;
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    th.red-header {
+      background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+    }
+
+    td {
+      padding: 14px 12px;
+      border-bottom: 1px solid var(--gray-lighter);
+    }
+
+    tbody tr:hover {
+      background: var(--blue-lighter);
+    }
+
+    .highlight-row {
+      background: rgba(231, 76, 60, 0.05);
+      font-weight: 600;
+    }
+
+    .highlight-value {
+      color: var(--red);
+      font-weight: 700;
+    }
+
+    .positive-value {
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    /* ========== CHARTS SECTION ========== */
+    .chart-container {
+      background: var(--white);
+      padding: 28px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--gray-lighter);
+      margin-bottom: 28px;
+    }
+
+    .chart-wrapper {
+      height: 350px;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-around;
+      gap: 12px;
+      padding: 20px 0;
+    }
+
+    .chart-bar {
+      flex: 1;
+      background: linear-gradient(180deg, var(--red) 0%, var(--red-dark) 100%);
+      border-radius: 8px 8px 0 0;
+      min-height: 40px;
+      position: relative;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .chart-bar:hover {
+      filter: brightness(1.1);
+    }
+
+    .chart-bar-value {
+      position: absolute;
+      top: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--blue);
+      white-space: nowrap;
+    }
+
+    .chart-bar-label {
+      position: absolute;
+      bottom: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      color: var(--gray-medium);
+      white-space: nowrap;
+      width: 80px;
+      text-align: center;
+    }
+
+    .chart-bar.blue-bar {
+      background: linear-gradient(180deg, var(--blue-light) 0%, var(--blue) 100%);
+    }
+
+    .chart-bar.green-bar {
+      background: linear-gradient(180deg, var(--success) 0%, #1E8449 100%);
+    }
+
+    /* ========== INSIGHTS ========== */
+    .insights {
+      background: var(--white);
+      padding: 24px;
+      border-radius: var(--radius);
+      border-left: 4px solid var(--red);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--gray-lighter);
+      border-left: 4px solid var(--red);
+    }
+
+    .insights-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--blue);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .insights ul {
+      list-style: none;
+    }
+
+    .insights li {
+      padding: 10px 0;
+      line-height: 1.6;
+      color: var(--gray-dark);
+      font-size: 13px;
+      border-bottom: 1px solid var(--gray-lighter);
+    }
+
+    .insights li:last-child {
+      border-bottom: none;
+    }
+
+    .insights strong {
+      color: var(--blue);
+      font-weight: 600;
+    }
+
+    /* ========== FOOTER ========== */
+    .footer {
+      padding: 16px 32px;
+      border-top: 1px solid var(--gray-lighter);
+      background: var(--white);
+      text-align: center;
+      font-size: 11px;
+      color: var(--gray-medium);
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 1024px) {
+      .header {
+        padding: 16px 24px;
+      }
+
+      .tabs-nav {
+        padding: 12px 24px 0;
+      }
+
+      .tabs-content {
+        padding: 24px;
+      }
+
+      .input-grid {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 16px;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        padding: 12px 16px;
+        justify-content: space-between;
+      }
+
+      .header-right {
+        gap: 12px;
+      }
+
+      .tabs-nav {
+        padding: 8px 16px 0;
+        gap: 4px;
+      }
+
+      .tab-btn {
+        padding: 10px 14px;
+        font-size: 11px;
+      }
+
+      .tabs-content {
+        padding: 16px;
+      }
+
+      .input-section {
+        padding: 16px;
+      }
+
+      .input-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .chart-wrapper {
+        height: 250px;
+      }
+
+      table {
+        font-size: 12px;
+      }
+
+      th, td {
+        padding: 10px 8px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .login-card {
+        padding: 32px 20px;
+      }
+
+      .login-header h1 {
+        font-size: 22px;
+      }
+
+      .header h1 {
+        font-size: 18px;
+      }
+
+      .header-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .tab-btn {
+        padding: 8px 10px;
+        font-size: 10px;
+      }
+
+      .tabs-content {
+        padding: 12px;
+      }
+
+      .input-section {
+        padding: 12px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tab-content h2 {
+        font-size: 18px;
+        margin-bottom: 16px;
+      }
+
+      .table-wrapper {
+        overflow-x: auto;
+      }
+
+      table {
+        min-width: 500px;
+        font-size: 11px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script>
+    // ============================================
+    // APP STATE MANAGEMENT
+    // ============================================
+    let appState = {
+      isLoggedIn: false,
+      currentUser: null,
+      activeTab: 'pac',
+      pac: {
+        eta: 35,
+        durata: 20,
+        premio: 3000,
+        profilo: 'bilanciato'
+      },
+      tfr: {
+        maturato: 125000,
+        anni: 15,
+        inflazione: 1.2,
+        aliquota: 33
+      },
+      investimenti: {
+        prodotto: 'vittoria_valore_futuro',
+        premio: 10000,
+        durata: 10
+      },
+      analisi: {
+        importo: 50000,
+        durata: 20,
+        rendMin: 0.03,
+        rendMed: 0.06,
+        rendMax: 0.09,
+        benchmark: 'tfr'
+      }
+    };
+
+    // ============================================
+    // PRODUCTS DATA
+    // ============================================
+    const USERS = ['Pippo', 'Marika', 'Patrizia', 'Francesca', 'Pietro', 'Gianluca'];
+    const PASSWORD = 'BrokerVN2025!';
+
+    const PRODUCTS = {
+      vittoria_valore_futuro: {
+        name: 'Vittoria Valore Futuro',
+        compagnia: 'Vittoria',
+        rendGs: 0.037,
+        rendUnit: 0.075,
+        comm: 0.016,
+        alloc: { gs: 0.80, unit: 0.20 }
+      },
+      italiana_bilanciato: {
+        name: 'Italiana Risparmio - Bilanciato',
+        compagnia: 'Italiana',
+        rendGs: 0,
+        rendUnit: 0.065,
+        comm: 0.015,
+        alloc: { gs: 0, unit: 1 }
+      },
+      allianz_gdp: {
+        name: 'Allianz Goal Driven Plan',
+        compagnia: 'Allianz',
+        rendGs: 0,
+        rendUnit: 0.08,
+        comm: 0.0175,
+        alloc: { gs: 0, unit: 1 }
+      },
+      zurich_trend: {
+        name: 'Zurich Trend GS',
+        compagnia: 'Zurich',
+        rendGs: 0.0268,
+        rendUnit: 0,
+        comm: 0.014,
+        alloc: { gs: 1, unit: 0 }
+      }
+    };
+
+    // ============================================
+    // RENDER FUNCTIONS
+    // ============================================
+    function render() {
+      const root = document.getElementById('root');
+      root.innerHTML = appState.isLoggedIn ? renderDashboard() : renderLogin();
+    }
+
+    function renderLogin() {
+      return `
+        <div class="login-wrapper">
+          <div class="login-card">
+            <div class="login-header">
+              <div class="login-logo">🏦</div>
+              <h1>VitaNuova</h1>
+              <p>Simulatore Broker Professionale</p>
+            </div>
+            <div class="login-form">
+              <div class="form-group">
+                <label>Seleziona Utente</label>
+                <select id="userSelect">
+                  ${USERS.map(u => `<option value="${u}">${u}</option>`).join('')}
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="passwordInput" placeholder="Inserisci password">
+              </div>
+              <div id="errorMsg"></div>
+              <button class="btn-login" onclick="handleLogin()">Accedi</button>
+            </div>
+            <div class="login-footer">
+              <p>Uso esclusivo VitaNuova Previdenza e Protezione</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderDashboard() {
+      return `
+        <div class="dashboard">
+          <header class="header">
+            <div class="header-left">
+              <h1>📊 Simulatore Broker</h1>
+              <span class="header-brand">VITANUOVA</span>
+            </div>
+            <div class="header-right">
+              <div class="user-badge">👤 ${appState.currentUser}</div>
+              <button class="btn-logout" onclick="handleLogout()">Esci</button>
+            </div>
+          </header>
+
+          <nav class="tabs-nav">
+            ${['pac', 'tfr', 'investimenti', 'analisi'].map(tab => `
+              <button class="tab-btn ${appState.activeTab === tab ? 'active' : ''}" 
+                onclick="switchTab('${tab}')">
+                ${tab === 'pac' ? '📋 PAC' : tab === 'tfr' ? '💰 TFR' : tab === 'investimenti' ? '📈 Investimenti' : '🔍 Analisi'}
+              </button>
+            `).join('')}
+          </nav>
+
+          <div class="tabs-content">
+            ${appState.activeTab === 'pac' ? renderTabPAC() : 
+              appState.activeTab === 'tfr' ? renderTabTFR() :
+              appState.activeTab === 'investimenti' ? renderTabInvestimenti() :
+              renderTabAnalisi()}
+          </div>
+
+          <footer class="footer">
+            © 2025 VitaNuova Previdenza e Protezione | Dati al 31-10-2025
+          </footer>
+        </div>
+      `;
+    }
+
+    function renderTabPAC() {
+      const p = appState.pac;
+      
+      const pacs = {
+        valore_futuro: {
+          name: 'Valore Futuro',
+          caric: 0.05,
+          commGs: 0.012,
+          commUnit: 0.02,
+          rendGs: 0.037,
+          rendUnit: 0.075,
+          allocGs: 0.80,
+          allocUnit: 0.20
+        },
+        risparmio: {
+          name: 'Risparmio Investimento',
+          caric: 0.08,
+          commGs: 0,
+          commUnit: p.profilo === 'bilanciato' ? 0.015 : 0.02,
+          rendGs: 0,
+          rendUnit: p.profilo === 'bilanciato' ? 0.065 : 0.095,
+          allocGs: 0,
+          allocUnit: 1
+        },
+        allianz: {
+          name: 'Goal Driven Plan',
+          caric: 0.0415,
+          commGs: 0,
+          commUnit: 0.0175,
+          rendGs: 0,
+          rendUnit: p.profilo === 'bilanciato' ? 0.08 : 0.09,
+          allocGs: 0,
+          allocUnit: 1
+        }
+      };
+
+      function calcMontante(premio, durata, rendimento, caric) {
+        let mont = 0;
+        for (let i = 0; i < durata; i++) {
+          mont = (mont + premio * (1 - caric)) * (1 + rendimento);
+        }
+        return mont;
+      }
+
+      const calcPac = (pac) => {
+        const rend = pac.rendGs * pac.allocGs + pac.rendUnit * pac.allocUnit;
+        const mont = calcMontante(p.premio, p.durata, rend, pac.caric);
+        const versato = p.premio * p.durata;
+        const roi = ((mont - versato) / versato * 100).toFixed(1);
+        return { mont, versato, roi, rend };
+      };
+
+      const p1 = calcPac(pacs.valore_futuro);
+      const p2 = calcPac(pacs.risparmio);
+      const p3 = calcPac(pacs.allianz);
+
+      const best = Math.max(p1.mont, p2.mont, p3.mont);
+      const roiBest = Math.max(parseFloat(p1.roi), parseFloat(p2.roi), parseFloat(p3.roi));
+
+      return `
+        <div class="tab-content">
+          <h2>📋 Confronto 3 PAC</h2>
+          
+          <div class="input-section">
+            <div class="input-grid">
+              <div class="input-field">
+                <label>Età</label>
+                <input type="number" min="18" max="80" value="${p.eta}" 
+                  onchange="updatePac('eta', this.value)">
+              </div>
+              <div class="input-field">
+                <label>Durata (anni)</label>
+                <input type="number" min="5" max="25" value="${p.durata}"
+                  onchange="updatePac('durata', this.value)">
+              </div>
+              <div class="input-field">
+                <label>Premio Annuo (€)</label>
+                <input type="number" min="600" max="24000" value="${p.premio}"
+                  onchange="updatePac('premio', this.value)">
+              </div>
+              <div class="input-field">
+                <label>Profilo Rischio</label>
+                <select onchange="updatePac('profilo', this.value)">
+                  <option value="bilanciato" ${p.profilo === 'bilanciato' ? 'selected' : ''}>Bilanciato</option>
+                  <option value="aggressivo" ${p.profilo === 'aggressivo' ? 'selected' : ''}>Aggressivo</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Versato Totale</div>
+              <div class="stat-value">€ ${(p.premio * p.durata).toLocaleString('it-IT')}</div>
+            </div>
+            <div class="stat-card positive">
+              <div class="stat-label">Miglior Montante</div>
+              <div class="stat-value">€ ${best.toLocaleString('it-IT', {maximumFractionDigits: 0})}</div>
+            </div>
+            <div class="stat-card positive">
+              <div class="stat-label">Miglior ROI</div>
+              <div class="stat-value">${roiBest}%</div>
+            </div>
+          </div>
+
+          <div class="chart-container">
+            <h3>Montante Lordo - Confronto Grafico</h3>
+            <div class="chart-wrapper" style="margin-top: 40px;">
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                <div class="chart-bar" style="width: 100%; height: ${(p1.mont / best * 100)}%;"></div>
+                <div class="chart-bar-label">Valore Futuro<br>€ ${p1.mont.toLocaleString('it-IT', {maximumFractionDigits: 0})}</div>
+              </div>
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                <div class="chart-bar blue-bar" style="width: 100%; height: ${(p2.mont / best * 100)}%;"></div>
+                <div class="chart-bar-label">Risparmio Investimento<br>€ ${p2.mont.toLocaleString('it-IT', {maximumFractionDigits: 0})}</div>
+              </div>
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                <div class="chart-bar green-bar" style="width: 100%; height: ${(p3.mont / best * 100)}%;"></div>
+                <div class="chart-bar-label">Goal Driven Plan<br>€ ${p3.mont.toLocaleString('it-IT', {maximumFractionDigits: 0})}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Parametro</th>
+                  <th class="red-header">Valore Futuro</th>
+                  <th class="red-header">Risparmio Investimento</th>
+                  <th class="red-header">Goal Driven Plan</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Compagnia</strong></td>
+                  <td>Vittoria Assicurazioni</td>
+                  <td>Italiana Assicurazioni</td>
+                  <td>Allianz Global Life</td>
+                </tr>
+                <tr>
+                  <td><strong>Caricamento</strong></td>
+                  <td>5%</td>
+                  <td>8%</td>
+                  <td>4,15%</td>
+                </tr>
+                <tr>
+                  <td><strong>Versato Totale</strong></td>
+                  <td>€ ${(p.premio * p.durata).toLocaleString('it-IT')}</td>
+                  <td>€ ${(p.premio * p.durata).toLocaleString('it-IT')}</td>
+                  <td>€ ${(p.premio * p.durata).toLocaleString('it-IT')}</td>
+                </tr>
+                <tr class="highlight-row">
+                  <td><strong>Montante Lordo</strong></td>
+                  <td class="highlight-value">€ ${p1.mont.toLocaleString('it-IT', {maximumFractionDigits: 0})}</td>
+                  <td class="highlight-value">€ ${p2.mont.toLocaleString('it-IT', {maximumFractionDigits: 0})}</td>
+                  <td class="highlight-value">€ ${p3.mont.toLocaleString('it-IT', {maximumFractionDigits: 0})}</td>
+                </tr>
+                <tr>
+                  <td><strong>ROI %</strong></td>
+                  <td class="positive-value">${p1.roi}%</td>
+                  <td class="positive-value">${p2.roi}%</td>
+                  <td class="positive-value">${p3.roi}%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="insights">
+            <div class="insights-title">💡 Insights e Consigli</div>
+            <ul>
+              <li>✅ <strong>Miglior Montante:</strong> ${p3.mont > p2.mont && p3.mont > p1.mont ? 'Goal Driven Plan' : p2.mont > p1.mont ? 'Risparmio Investimento' : 'Valore Futuro'}</li>
+              <li>✅ <strong>Miglior ROI:</strong> ${parseFloat(p3.roi) > parseFloat(p2.roi) && parseFloat(p3.roi) > parseFloat(p1.roi) ? 'Goal Driven Plan' : parseFloat(p2.roi) > parseFloat(p1.roi) ? 'Risparmio Investimento' : 'Valore Futuro'} (${roiBest}%)</li>
+              <li>✅ <strong>Costi Inferiori:</strong> Goal Driven ha caricamenti più bassi nei primi 5 anni</li>
+              <li>ℹ️ <strong>Rendimento Atteso:</strong> Dipende dall'allocazione tra GS e Unit Linked</li>
+            </ul>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderTabTFR() {
+      const t = appState.tfr;
+      
+      const rendAzienda = 0.015 + (0.75 * t.inflazione / 100);
+      let montLordoAz = t.maturato;
+      for (let i = 0; i < t.anni; i++) {
+        montLordoAz = montLordoAz * (1 + rendAzienda);
+      }
+      const imposAz = montLordoAz * (t.aliquota / 100);
+      const montNettoAz = montLordoAz - imposAz;
+
+      const rendFondo = 0.04;
+      const aliqFondo = 0.12;
+      let montLordoFond = t.maturato;
+      for (let i = 0; i < t.anni; i++) {
+        montLordoFond = montLordoFond * (1 + rendFondo);
+      }
+      const imposFond = montLordoFond * aliqFondo;
+      const montNettoFond = montLordoFond - imposFond;
+
+      const delta = montNettoFond - montNettoAz;
+      const deltaPct = (delta / montNettoAz * 100).toFixed(1);
+
+      return `
+        <div class="tab-content">
+          <h2>💰 TFR Azienda vs Fondo Pensione</h2>
+          
+          <div class="input-section">
+            <div class="input-grid">
+              <div class="input-field">
+                <label>TFR Maturato (€)</label>
+                <input type="number" min="10000" max="500000" value="${t.maturato}"
+                  onchange="updateTfr('maturato', this.value)">
+              </div>
+              <div class="input-field">
+                <label>Anni alla Pensione</label>
+                <input type="number" min="1" max="40" value="${t.anni}"
+                  onchange="updateTfr('anni', this.value)">
+              </div>
+              <div class="input-field">
+                <label>Inflazione Attesa (%)</label>
+                <input type="number" min="0" max="5" step="0.1" value="${t.inflazione}"
+                  onchange="updateTfr('inflazione', this.value)">
+              </div>
+              <div class="input-field">
+                <label>Aliquota Fiscale (%)</label>
+                <input type="number" min="20" max="43" value="${t.aliquota}"
+                  onchange="updateTfr('aliquota', this.value)">
+              </div>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Rendimento TFR</div>
+              <div class="stat-value">${(rendAzienda * 100).toFixed(2)}%</div>
+              <div class="stat-change">+ Inflazione</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Rendimento Fondo</div>
+              <div class="stat-value">4,00%</div>
+              <div class="stat-change">Garantito</div>
+            </div>
+            <div class={`stat-card ${delta > 0 ? 'positive' : 'negative'}`}>
+              <div class="stat-label">Vantaggio Fondo</div>
+              <div class="stat-value">€ ${Math.abs(delta).toLocaleString('it-IT', {maximumFractionDigits: 0})}</div>
+              <div class="stat-change">${deltaPct}%</div>
+            </div>
+          </div>
+
+          <div class="chart-container">
+            <h3>Montante Netto - Confronto Grafico</h3>
+            <div class="chart-wrapper" style="margin-top: 40px;">
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                <div class="chart-bar" style="width: 100%; height: ${(montNettoAz / Math.max(montNettoAz, montNettoFond) * 100)}%;"></div>
+                <div class="chart-bar-label">TFR Azienda<br>€ ${montNettoAz.toLocaleString('it-IT', {maximumFractionDigits: 0})}</div>
+              </div>
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                <div class="chart-bar green-bar" style="width: 100%; height: ${(montNettoFond / Math.max(montNettoAz, montNettoFond) * 100)}%;"></div>
+                <div class="chart-bar-label">Fondo Pensione<br>€ ${montNettoFond.toLocaleString('it-IT', {maximumFractionDigits: 0})}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Parametro</th>
+                  <th class="red-header">TFR Azienda</th>
+                  <th class="red-header">Fondo Pensione</th>
+                  <th>Differenza</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Rendimento Annuo</strong></td>
+                  <td>${(rendAzienda * 100).toFixed(2)}%</td>
+                  <td>4,00%</td>
+                  <td>${((0.04 - rendAzienda) * 100).toFixed(2)}%</td>
+                </tr>
+                <tr>
+                  <td><strong>Montante Lordo</strong></td>
+                  <td>€ ${montLordoAz.toLocaleString('it-IT', {maximumFractionDigits: 0})}</td>
+                  <td>€ ${montLordoFond.toLocaleString('it-IT', {maximumFractionDigits: 0})}</td>
+                  <td>€ ${(montLordoFond - montLordoAz).toLocaleString('it-IT', {maximumFractionDigits: 0})}</td>
+                </tr>
+                <tr>
+                  <td><strong>Tassazione</strong></td>
+                  <td>${t.aliquota}%</td>
+                  <td>12% (agevolata)</td>
+                  <td>-${(t.aliquota - 12)}%</td>
+                </tr>
+                <tr>
+                  <td><strong>Imposta</strong></td>
+                  <td>€ ${imposAz.toLocaleString('it-IT', {maximumFractionDigits: 0})}</td>
+                  <td>€ ${imposFond.toLocaleString('it-IT', {maximumFractionDigits: 0})}</td>
+                  <td>€ ${(imposAz - imposFond).toLocaleString('it-IT', {maximumFractionDigits: 0})}</td>
+                </tr>
+                <tr class="highlight-row">
+                  <td><strong>Montante Netto</strong></td>
+                  <td class="highlight-value">€ ${montNettoAz.toLocaleString('it-IT', {maximumFractionDigits: 0})}</td>
+                  <td class="highlight-value">€ ${montNettoFond.toLocaleString('it-IT', {maximumFractionDigits: 0})}</td>
+                  <td class="positive-value">€ ${delta.toLocaleString('it-IT', {maximumFractionDigits: 0})}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="insights">
+            <div class="insights-title">💡 Insights</div>
+            <ul>
+              <li>✅ <strong>Rendimento:</strong> Fondo più conveniente con 4% vs ${(rendAzienda * 100).toFixed(2)}% azienda</li>
+              <li>✅ <strong>Tassazione Agevolata:</strong> 12% nel fondo = risparmio € ${(imposAz - imposFond).toLocaleString('it-IT', {maximumFractionDigits: 0})}</li>
+              <li>✅ <strong>Vantaggio Totale:</strong> +€ ${delta.toLocaleString('it-IT', {maximumFractionDigits: 0})} (${deltaPct}% in più)</li>
+              <li>ℹ️ <strong>Flessibilità:</strong> Nel fondo puoi anticipare fino al 75% per spese sanitarie e prima casa</li>
+            </ul>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderTabInvestimenti() {
+      const i = appState.investimenti;
+      const prod = PRODUCTS[i.prodotto];
+      
+      const rend = prod.rendGs * prod.alloc.gs + prod.rendUnit * prod.alloc.unit;
+      let mont = i.premio;
+      for (let x = 0; x < i.durata; x++) {
+        mont = mont * (1 + rend);
+      }
+      const guadagno = mont - i.premio;
+      const roi = (guadagno / i.premio * 100).toFixed(2);
+
+      return `
+        <div class="tab-content">
+          <h2>📈 Simulatore Investimenti</h2>
+          
+          <div class="input-section">
+            <div class="input-grid">
+              <div class="input-field">
+                <label>Seleziona Prodotto</label>
+                <select onchange="updateInvestimenti('prodotto', this.value)">
+                  ${Object.entries(PRODUCTS).map(([k, p]) => 
+                    `<option value="${k}" ${i.prodotto === k ? 'selected' : ''}>${p.name}</option>`
+                  ).join('')}
+                </select>
+              </div>
+              <div class="input-field">
+                <label>Premio Iniziale (€)</label>
+                <input type="number" min="1000" max="100000" value="${i.premio}"
+                  onchange="updateInvestimenti('premio', this.value)">
+              </div>
+              <div class="input-field">
+                <label>Durata (anni)</label>
+                <input type="number" min="1" max="40" value="${i.durata}"
+                  onchange="updateInvestimenti('durata', this.value)">
+              </div>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Premio Versato</div>
+              <div class="stat-value">€ ${i.premio.toLocaleString('it-IT')}</div>
+            </div>
+            <div class="stat-card positive">
+              <div class="stat-label">Montante Lordo</div>
+              <div class="stat-value">€ ${mont.toLocaleString('it-IT', {maximumFractionDigits: 0})}</div>
+            </div>
+            <div class="stat-card positive">
+              <div class="stat-label">Guadagno</div>
+              <div class="stat-value">€ ${guadagno.toLocaleString('it-IT', {maximumFractionDigits: 0})}</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">ROI</div>
+              <div class="stat-value">${roi}%</div>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Caratteristica</th>
+                  <th class="red-header">Valore</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Prodotto</strong></td>
+                  <td>${prod.name}</td>
+                </tr>
+                <tr>
+                  <td><strong>Compagnia</strong></td>
+                  <td>${prod.compagnia}</td>
+                </tr>
+                <tr>
+                  <td><strong>Rendimento Medio</strong></td>
+                  <td>${(rend * 100).toFixed(2)}%</td>
+                </tr>
+                <tr>
+                  <td><strong>Commissione Annua</strong></td>
+                  <td>${(prod.comm * 100).toFixed(2)}%</td>
+                </tr>
+                <tr>
+                  <td><strong>Allocazione</strong></td>
+                  <td>GS: ${(prod.alloc.gs * 100).toFixed(0)}% | Unit: ${(prod.alloc.unit * 100).toFixed(0)}%</td>
+                </tr>
+                <tr class="highlight-row">
+                  <td><strong>Montante Lordo</strong></td>
+                  <td class="highlight-value">€ ${mont.toLocaleString('it-IT', {maximumFractionDigits: 0})}</td>
+                </tr>
+                <tr>
+                  <td><strong>Guadagno</strong></td>
+                  <td class="positive-value">€ ${guadagno.toLocaleString('it-IT', {maximumFractionDigits: 0})}</td>
+                </tr>
+                <tr>
+                  <td><strong>ROI %</strong></td>
+                  <td class="positive-value">${roi}%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="insights">
+            <div class="insights-title">💡 Dettagli Investimento</div>
+            <ul>
+              <li>✅ <strong>Durata:</strong> ${i.durata} anni</li>
+              <li>✅ <strong>Rendimento Annualizzato:</strong> ${(rend * 100).toFixed(2)}%</li>
+              <li>✅ <strong>Commissione Media:</strong> ${(prod.comm * 100).toFixed(2)}% annua</li>
+              <li>ℹ️ <strong>Nota:</strong> Montante calcolato al lordo di tasse. Considerare tassazione finale.</li>
+            </ul>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderTabAnalisi() {
+      const a = appState.analisi;
+
+      function calcScenario(rend) {
+        let mont = a.importo;
+        for (let i = 0; i < a.durata; i++) {
+          mont = mont * (1 + rend);
+        }
+        return mont;
+      }
+
+      const montP = calcScenario(a.rendMin);
+      const montM = calcScenario(a.rendMed);
+      const montD = calcScenario(a.rendMax);
+
+      const benchmarks = {
+        tfr: 0.024,
+        btp: 0.035,
+        conto_deposito: 0.025,
+        fondo_pensione: 0.04
+      };
+
+      const montB = calcScenario(benchmarks[a.benchmark]);
+
+      return `
+        <div class="tab-content">
+          <h2>🔍 Analisi Avanzata - ROI, BEP, Scenari</h2>
+          
+          <div class="input-section">
+            <div class="input-grid">
+              <div class="input-field">
+                <label>Importo Investito (€)</label>
+                <input type="number" min="5000" max="200000" value="${a.importo}"
+                  onchange="updateAnalisi('importo', this.value)">
+              </div>
+              <div class="input-field">
+                <label>Durata (anni)</label>
+                <input type="number" min="1" max="40" value="${a.durata}"
+                  onchange="updateAnalisi('durata', this.value)">
+              </div>
+              <div class="input-field">
+                <label>Benchmark</label>
+                <select onchange="updateAnalisi('benchmark', this.value)">
+                  <option value="tfr" ${a.benchmark === 'tfr' ? 'selected' : ''}>TFR Azienda (2,4%)</option>
+                  <option value="btp" ${a.benchmark === 'btp' ? 'selected' : ''}>BTP (3,5%)</option>
+                  <option value="conto_deposito" ${a.benchmark === 'conto_deposito' ? 'selected' : ''}>Conto Deposito (2,5%)</option>
+                  <option value="fondo_pensione" ${a.benchmark === 'fondo_pensione' ? 'selected' : ''}>Fondo Pensione (4%)</option>
+                </select>
+              </div>
+            </div>
+            <div class="input-grid" style="margin-top: 16px;">
+              <div class="input-field">
+                <label>Rendimento Prudente (%)</label>
+                <input type="number" min="0" max="20" step="0.5" value="${(a.rendMin * 100).toFixed(1)}"
+                  onchange="updateAnalisi('rendMin', this.value / 100)">
+              </div>
+              <div class="input-field">
+                <label>Rendimento Medio (%)</label>
+                <input type="number" min="0" max="20" step="0.5" value="${(a.rendMed * 100).toFixed(1)}"
+                  onchange="updateAnalisi('rendMed', this.value / 100)">
+              </div>
+              <div class="input-field">
+                <label>Rendimento Dinamico (%)</label>
+                <input type="number" min="0" max="20" step="0.5" value="${(a.rendMax * 100).toFixed(1)}"
+                  onchange="updateAnalisi('rendMax', this.value / 100)">
+              </div>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Scenario Prudente</div>
+              <div class="stat-value">€ ${montP.toLocaleString('it-IT', {maximumFractionDigits: 0})}</div>
+              <div class="stat-change">${((montP - a.importo) / a.importo * 100).toFixed(1)}% ROI</div>
+            </div>
+            <div class="stat-card positive">
+              <div class="stat-label">Scenario Medio</div>
+              <div class="stat-value">€ ${montM.toLocaleString('it-IT', {maximumFractionDigits: 0})}</div>
+              <div class="stat-change">${((montM - a.importo) / a.importo * 100).toFixed(1)}% ROI</div>
+            </div>
+            <div class="stat-card positive">
+              <div class="stat-label">Scenario Dinamico</div>
+              <div class="stat-value">€ ${montD.toLocaleString('it-IT', {maximumFractionDigits: 0})}</div>
+              <div class="stat-change">${((montD - a.importo) / a.importo * 100).toFixed(1)}% ROI</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Benchmark Confronto</div>
+              <div class="stat-value">€ ${montB.toLocaleString('it-IT', {maximumFractionDigits: 0})}</div>
+            </div>
+          </div>
+
+          <div class="chart-container">
+            <h3>Montante Finali - Scenari vs Benchmark</h3>
+            <div class="chart-wrapper" style="margin-top: 40px;">
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                <div class="chart-bar" style="width: 100%; height: ${(montP / Math.max(montP, montM, montD, montB) * 100)}%;"></div>
+                <div class="chart-bar-label">Prudente<br>€ ${montP.toLocaleString('it-IT', {maximumFractionDigits: 0})}</div>
+              </div>
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                <div class="chart-bar blue-bar" style="width: 100%; height: ${(montM / Math.max(montP, montM, montD, montB) * 100)}%;"></div>
+                <div class="chart-bar-label">Medio<br>€ ${montM.toLocaleString('it-IT', {maximumFractionDigits: 0})}</div>
+              </div>
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                <div class="chart-bar green-bar" style="width: 100%; height: ${(montD / Math.max(montP, montM, montD, montB) * 100)}%;"></div>
+                <div class="chart-bar-label">Dinamico<br>€ ${montD.toLocaleString('it-IT', {maximumFractionDigits: 0})}</div>
+              </div>
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                <div class="chart-bar" style="width: 100%; height: ${(montB / Math.max(montP, montM, montD, montB) * 100)}%; opacity: 0.5;"></div>
+                <div class="chart-bar-label">Benchmark<br>€ ${montB.toLocaleString('it-IT', {maximumFractionDigits: 0})}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Scenario</th>
+                  <th class="red-header">Rendimento</th>
+                  <th class="red-header">Montante</th>
+                  <th>Guadagno</th>
+                  <th>ROI</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Prudente</strong></td>
+                  <td>${(a.rendMin * 100).toFixed(2)}%</td>
+                  <td>€ ${montP.toLocaleString('it-IT', {maximumFractionDigits: 0})}</td>
+                  <td>€ ${(montP - a.importo).toLocaleString('it-IT', {maximumFractionDigits: 0})}</td>
+                  <td>${((montP - a.importo) / a.importo * 100).toFixed(1)}%</td>
+                </tr>
+                <tr class="highlight-row">
+                  <td><strong>Medio</strong></td>
+                  <td>${(a.rendMed * 100).toFixed(2)}%</td>
+                  <td class="highlight-value">€ ${montM.toLocaleString('it-IT', {maximumFractionDigits: 0})}</td>
+                  <td class="highlight-value">€ ${(montM - a.importo).toLocaleString('it-IT', {maximumFractionDigits: 0})}</td>
+                  <td class="highlight-value">${((montM - a.importo) / a.importo * 100).toFixed(1)}%</td>
+                </tr>
+                <tr>
+                  <td><strong>Dinamico</strong></td>
+                  <td>${(a.rendMax * 100).toFixed(2)}%</td>
+                  <td>€ ${montD.toLocaleString('it-IT', {maximumFractionDigits: 0})}</td>
+                  <td>€ ${(montD - a.importo).toLocaleString('it-IT', {maximumFractionDigits: 0})}</td>
+                  <td>${((montD - a.importo) / a.importo * 100).toFixed(1)}%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="insights">
+            <div class="insights-title">💡 Analisi Approfondita</div>
+            <ul>
+              <li>✅ <strong>Vantaggio Scenario Medio:</strong> +€ ${(montM - montB).toLocaleString('it-IT', {maximumFractionDigits: 0})} vs Benchmark</li>
+              <li>✅ <strong>Scenario Migliore:</strong> Dinamico con ${(a.rendMax * 100).toFixed(2)}% = € ${montD.toLocaleString('it-IT', {maximumFractionDigits: 0})}</li>
+              <li>✅ <strong>Range Guadagno:</strong> Da €${(montP - a.importo).toLocaleString('it-IT', {maximumFractionDigits: 0})} a €${(montD - a.importo).toLocaleString('it-IT', {maximumFractionDigits: 0})}</li>
+              <li>ℹ️ <strong>Raccomandazione:</strong> Scenario medio offre il miglior equilibrio rischio/rendimento</li>
+            </ul>
+          </div>
+        </div>
+      `;
+    }
+
+    // ============================================
+    // EVENT HANDLERS
+    // ============================================
+    function handleLogin() {
+      const user = document.getElementById('userSelect').value;
+      const password = document.getElementById('passwordInput').value;
+      const errorMsg = document.getElementById('errorMsg');
+
+      if (password === PASSWORD) {
+        appState.isLoggedIn = true;
+        appState.currentUser = user;
+        errorMsg.innerHTML = '';
+        render();
+      } else {
+        errorMsg.innerHTML = '<div class="error-msg">❌ Password non corretta</div>';
+      }
+    }
+
+    function handleLogout() {
+      appState.isLoggedIn = false;
+      appState.currentUser = null;
+      appState.activeTab = 'pac';
+      render();
+    }
+
+    function switchTab(tab) {
+      appState.activeTab = tab;
+      render();
+    }
+
+    function updatePac(field, value) {
+      appState.pac[field] = isNaN(value) ? value : parseFloat(value);
+      render();
+    }
+
+    function updateTfr(field, value) {
+      appState.tfr[field] = parseFloat(value);
+      render();
+    }
+
+    function updateInvestimenti(field, value) {
+      appState.investimenti[field] = isNaN(value) ? value : parseFloat(value);
+      render();
+    }
+
+    function updateAnalisi(field, value) {
+      appState.analisi[field] = isNaN(value) ? value : parseFloat(value);
+      render();
+    }
+
+    // ============================================
+    // INIT
+    // ============================================
+    render();
+  </script>
+</body>
+</html>
